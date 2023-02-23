@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<launch>
+
+    <!-- argument of the path to map file -->
+    <arg name="map_file" default="$(find where_am_i)/maps/map.yaml"/>
+
+    <!-- map server node provides map data as a ROS service to other nodes -->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
+
+    <!-- adaptive monte carlo localization node which takes odometry and laser scan data to perform localization -->
+    <node name="amcl" pkg="amcl" type="amcl" output="screen">
+	<!-- the amcl pkg by default looks for the "scan" topic for LiDAR data. the Hokuyo LiDAR publishes on the /laser/scan topic so this remaps the topic name -->
+	<remap from="scan" to="where_am_i/laser/scan"/>
+	<!-- other parameters from https://wiki.ros.org/amcl -->
+	<param name="odom_fram_id" value="odom"/>
+	<param name="odom_model_type" value="diff-corrected"/>
+	<param name="base_frame_id" value="robot_footprint"/>
+	<param name="global_frame_id" value="map"/>
+
+	<!-- initial pose -->
+	<param name="initial_pose_x" value="0"/>
+	<param name="initial_pose_y" value="0"/>
+    </node>
+
+    <!-- move base node so the robot can move and localize itself -->
+    <node name="move_base" pkg="move_base" type="move_base" respawn="false" output="screen">
+	<remap from="scan" to="where_am_i/laser/scan"/>
+	<param name="base_global_planner" value="navfn/NavfnROS"/>
+	<param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
+
+	<rosparam file="$(find where_am_i)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+	<rosparam file="$(find where_am_i)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+	<rosparam file="$(find where_am_i)/config/local_costmap_params.yaml" command="load"/>
+	<rosparam file="$(find where_am_i)/config/global_costmap_params.yaml" command="load"/>
+	<rosparam file="$(find where_am_i)/config/base_local_planner_params.yaml" command="load"/>
+    </node>
+
+</launch>
