@@ -17,7 +17,8 @@ The project consists of the following parts:
 ## Build and Launch
   1) Clone project and initialize a catkin workspace
 ```
-$ mkdir catkin_ws && cd catkin_ws
+$ mkdir catkin_ws 
+$ cd catkin_ws
 $ git clone https://github.com/huuanhhuynguyen/RoboND-Map-My-World.git
 $ mv RoboND-Map-My-World src
 $ cd src && catkin_init_workspace
@@ -28,7 +29,7 @@ $ cd src && catkin_init_workspace
 $ git clone https://github.com/ros-teleop/teleop_twist_keyboard
 ```
 
-  3) Move back to catkin_ws\ and build
+  3) Move back to catkin_ws and build
 ```
 $ cd ..
 $ catkin_make
