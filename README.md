@@ -3,6 +3,9 @@
 An application of rtabmap-ros package for simultaneous localization and mapping (SLAM) of a mobile robot. 
 This project is part of Udacity Robotics Software Engineer Nanodegree.
 
+## Mapping Example
+![](mapping_example.png)
+
 ## Description
 The project consists of the following parts:
 
